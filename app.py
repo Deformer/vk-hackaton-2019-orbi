@@ -291,8 +291,8 @@ def upload_file():
         if colors == -1:
             abort(400, 'No faces on the picture')
         return {
-            'face_redness_percentage': int(skinRedness(colors['face'])*100),
-            'teeth_plaque_percentage': int(toothPlaque(colors['mouth'])*100)
+            'face_redness_percentage': int(skinRedness(colors['face'])*100*2),
+            'teeth_plaque_percentage': int(toothPlaque(colors['mouth'])*100*2)
         }
 
 if __name__ == '__main__':
