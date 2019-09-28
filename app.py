@@ -12,8 +12,8 @@ import imutils
 import pprint
 from matplotlib import pyplot as plt
 
-FD_API_KEY='7h17KxZ1Yc75v2pAOniItVywJfEeRruP'
-FD_API_SECRET='6KoeSM_36a-zVHXcUXjFWDzzZbJfvUbA'
+FD_API_KEY=os.environ['FD_API_KEY']
+FD_API_SECRET=os.environ['FD_API_SECRET']
 UPLOAD_DIR='files'
 
 app = Flask(__name__)
