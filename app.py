@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, abort
 import os
 import time
 import numpy as np
@@ -58,6 +58,8 @@ def getFaceImage(path):
     response = requests.post('https://api-us.faceplusplus.com/facepp/v3/detect', data=data, files=files)
     if response.ok:
         body = response.json()
+        if len(body['faces']) == 0:
+            return -1
         face =body['faces'][0]['face_rectangle']
         lm=body['faces'][0]['landmark']
         left=lm['mouth_left_corner']
@@ -240,8 +242,7 @@ def extractDominantColor(image, number_of_colors=5, hasThresholding=False):
 def getDominantColor(imagePath):
     imgPath=getFaceImage(imagePath)
     if imgPath == -1:
-        print('Error ImpPath')
-        sys.exit(-1)
+        return -1
     face=cv2.imread(imgPath['face'])
     faceSkin = extractSkin(face)
     faceColors=extractDominantColor(faceSkin, hasThresholding=True)
@@ -287,6 +288,8 @@ def upload_file():
         path = f'{UPLOAD_DIR}/file-{timestr}{ext}'
         f.save(path)
         colors = getDominantColor(path)
+        if colors == -1:
+            abort(400, 'No faces on the picture')
         return {
             'face_redness_percentage': int(skinRedness(colors['face'])*100),
             'teeth_plaque_percentage': int(toothPlaque(colors['mouth'])*100)
